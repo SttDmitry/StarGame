@@ -23,7 +23,7 @@ public class MenuScreen extends BaseScreen {
     public void show() {
         super.show();
         img = new Texture("badlogic.jpg");
-        touch = new Vector2(2,2);
+        touch = new Vector2(6,6);
         v = new Vector2();
 
     }
@@ -36,7 +36,7 @@ public class MenuScreen extends BaseScreen {
         batch.draw(img, touch.x, touch.y);
         batch.end();
         touch.add(v);
-        if (Math.abs(touch.x % pX) < 3f && Math.abs(touch.y % pY) < 3f) {
+        if (Math.abs(touch.x % pX) < 5f && Math.abs(touch.y % pY) < 5f) {
             v.set(0,0);
         }
     }

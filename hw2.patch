@@ -1,0 +1,243 @@
+Index: core/src/ru/stargame/base/BaseScreen.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/src/ru/stargame/base/BaseScreen.java	(date 1612469635422)
++++ core/src/ru/stargame/base/BaseScreen.java	(date 1612469635422)
+@@ -0,0 +1,98 @@
++package ru.stargame.base;
++
++import com.badlogic.gdx.Gdx;
++import com.badlogic.gdx.InputProcessor;
++import com.badlogic.gdx.Screen;
++import com.badlogic.gdx.graphics.g2d.SpriteBatch;
++
++public class BaseScreen implements Screen, InputProcessor {
++
++    protected SpriteBatch batch;
++
++    @Override
++    public void show() {
++        System.out.println("show");
++        batch = new SpriteBatch();
++        Gdx.input.setInputProcessor(this);
++    }
++
++    @Override
++    public void render(float delta) {
++
++    }
++
++    @Override
++    public void resize(int width, int height) {
++        System.out.println("resize width = " + width + " height = " + height);
++    }
++
++    @Override
++    public void pause() {
++        System.out.println("pause");
++    }
++
++    @Override
++    public void resume() {
++        System.out.println("resume");
++    }
++
++    @Override
++    public void hide() {
++        System.out.println("hide");
++        dispose();
++    }
++
++    @Override
++    public void dispose() {
++        System.out.println("dispose");
++        batch.dispose();
++    }
++
++    @Override
++    public boolean keyDown(int keycode) {
++        System.out.println("keyDown keycode = " + keycode);
++        return false;
++    }
++
++    @Override
++    public boolean keyUp(int keycode) {
++        System.out.println("keyUp keycode = " + keycode);
++        return false;
++    }
++
++    @Override
++    public boolean keyTyped(char character) {
++        System.out.println("keyTyped character = " + character);
++        return false;
++    }
++
++    @Override
++    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
++        System.out.println("touchDown screenX = " + screenX + " screenY = " + screenY);
++        return false;
++    }
++
++    @Override
++    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
++        System.out.println("touchUp screenX = " + screenX + " screenY = " + screenY);
++        return false;
++    }
++
++    @Override
++    public boolean touchDragged(int screenX, int screenY, int pointer) {
++        System.out.println("touchDragged screenX = " + screenX + " screenY = " + screenY);
++        return false;
++    }
++
++    @Override
++    public boolean mouseMoved(int screenX, int screenY) {
++        return false;
++    }
++
++    @Override
++    public boolean scrolled(float amountX, float amountY) {
++        return false;
++    }
++
++
++}
+Index: core/src/ru/stargame/screen/MenuScreen.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/src/ru/stargame/screen/MenuScreen.java	(date 1612478299358)
++++ core/src/ru/stargame/screen/MenuScreen.java	(date 1612478299358)
+@@ -0,0 +1,81 @@
++package ru.stargame.screen;
++
++import com.badlogic.gdx.Gdx;
++import com.badlogic.gdx.Input;
++import com.badlogic.gdx.graphics.GL20;
++import com.badlogic.gdx.graphics.Texture;
++import com.badlogic.gdx.math.Vector2;
++
++import ru.stargame.base.BaseScreen;
++
++public class MenuScreen extends BaseScreen {
++
++    private Texture img;
++    private Vector2 touch;
++    private Vector2 v;
++    private float pX;
++    private float pY;
++
++
++
++
++    @Override
++    public void show() {
++        super.show();
++        img = new Texture("badlogic.jpg");
++        touch = new Vector2(2,2);
++        v = new Vector2();
++
++    }
++
++    @Override
++    public void render(float delta) {
++        Gdx.gl.glClearColor(0.3f, 0.6f, 0.4f, 1);
++        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
++        batch.begin();
++        batch.draw(img, touch.x, touch.y);
++        batch.end();
++        touch.add(v);
++        if (Math.abs(touch.x % pX) < 3f && Math.abs(touch.y % pY) < 3f) {
++            v.set(0,0);
++        }
++    }
++
++    @Override
++    public void dispose() {
++        img.dispose();
++        super.dispose();
++    }
++
++    @Override
++    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
++//        touch.set(screenX, Gdx.graphics.getHeight() - screenY);
++        float subX = (screenX - touch.x) / 200.0f;
++        float subY = (Gdx.graphics.getHeight() - screenY - touch.y) / 200.0f;
++        System.out.println("sX="+subX+"; sY="+subY);
++        pX = screenX;
++        pY = Gdx.graphics.getHeight()-screenY;
++        v.set(subX,subY);
++        return false;
++    }
++
++    @Override
++    public boolean keyDown(int keycode) {
++        switch (keycode) {
++            case Input.Keys.UP:
++                touch.y += 10;
++                break;
++            case Input.Keys.DOWN:
++                touch.y -= 10;
++                break;
++            case Input.Keys.RIGHT:
++                touch.x += 10;
++                break;
++            case Input.Keys.LEFT:
++                touch.x -= 10;
++                break;
++        }
++        return false;
++    }
++
++}
+Index: core/src/ru/stargame/StarGame.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/src/ru/stargame/StarGame.java	(revision febd0fe34a115320fc2218be145a2b1dde5445b2)
++++ core/src/ru/stargame/StarGame.java	(date 1612469864621)
+@@ -1,34 +1,15 @@
+ package ru.stargame;
+ 
+-import com.badlogic.gdx.ApplicationAdapter;
+-import com.badlogic.gdx.Gdx;
+-import com.badlogic.gdx.graphics.GL20;
+-import com.badlogic.gdx.graphics.Texture;
+-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
++import com.badlogic.gdx.Game;
+ 
+-public class StarGame extends ApplicationAdapter {
+-	SpriteBatch batch;
+-	Texture img;
++import ru.stargame.screen.MenuScreen;
++
++public class StarGame extends Game {
+ 	
+ 	@Override
+ 	public void create () {
+-		batch = new SpriteBatch();
+-//		img = new Texture("badlogic.jpg");
+-		img = new Texture("game-controller.png");
+-	}
++		setScreen(new MenuScreen());
+ 
+-	@Override
+-	public void render () {
+-		Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+-		batch.begin();
+-		batch.draw(img, 10, 10);
+-		batch.end();
+ 	}
+-	
+-	@Override
+-	public void dispose () {
+-		batch.dispose();
+-		img.dispose();
+-	}
++
+ }
