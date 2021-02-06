@@ -23,7 +23,7 @@ public class MenuScreen extends BaseScreen {
     public void show() {
         super.show();
         img = new Texture("badlogic.jpg");
-        touch = new Vector2(6,6);
+        touch = new Vector2(0,0);
         v = new Vector2();
 
     }
@@ -35,11 +35,31 @@ public class MenuScreen extends BaseScreen {
         batch.begin();
         batch.draw(img, touch.x, touch.y);
         batch.end();
-        touch.add(v);
-        if (Math.abs(touch.x % pX) < 5f && Math.abs(touch.y % pY) < 5f) {
-            v.set(0,0);
+//        touch.add(v);
+//        if (Math.abs(touch.x % pX) < Math.abs(v.x) && Math.abs(touch.y % pY) < Math.abs(v.y)) {
+//            v.set(0,0);
+//        }
+        if (touch.x > pX) {
+            if (touch.x != pX) {
+                touch.x --;
+            }
+        } else {
+            if (touch.x != pX) {
+                touch.x ++;
+            }
+        }
+
+        if (touch.y > pY) {
+            if (touch.y != pY) {
+                touch.y --;
+            }
+        } else {
+            if (touch.y != pY) {
+                touch.y ++;
+            }
         }
     }
+
 
     @Override
     public void dispose() {
@@ -50,12 +70,12 @@ public class MenuScreen extends BaseScreen {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 //        touch.set(screenX, Gdx.graphics.getHeight() - screenY);
-        float subX = (screenX - touch.x) / 200.0f;
-        float subY = (Gdx.graphics.getHeight() - screenY - touch.y) / 200.0f;
-        System.out.println("sX="+subX+"; sY="+subY);
+//        float subX = (screenX - touch.x) / 200.0f;
+//        float subY = (Gdx.graphics.getHeight() - screenY - touch.y) / 200.0f;
+//        System.out.println("sX="+subX+"; sY="+subY);
         pX = screenX;
         pY = Gdx.graphics.getHeight()-screenY;
-        v.set(subX,subY);
+//        v.set(subX,subY);
         return false;
     }
 
