@@ -148,8 +148,9 @@ public class BaseScreen implements Screen, InputProcessor {
     }
 
     @Override
-    public boolean scrolled(float a, float b) {
-        System.out.println("scrolled amount = " + a +" " + b);
+    public boolean scrolled(float amountX, float amountY) {
         return false;
     }
+
+
 }
