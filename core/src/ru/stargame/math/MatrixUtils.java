@@ -1,9 +1,14 @@
 package ru.stargame.math;
 
+
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
 
+/**
+ * Утилита для работы с матрицами
+ */
 public class MatrixUtils {
+
     private MatrixUtils() {
     }
 

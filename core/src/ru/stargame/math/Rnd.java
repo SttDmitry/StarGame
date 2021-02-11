@@ -1,8 +1,10 @@
-package ru.stargame.math;
-
+package ru.geekbrains.math;
 
 import java.util.Random;
 
+/**
+ * Генератор случайных чисел
+ */
 public class Rnd {
     private static final Random random = new Random();
 
