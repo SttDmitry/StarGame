@@ -2,7 +2,9 @@ package ru.stargame.sprite;
 
 
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -34,6 +36,7 @@ public class Ship extends Sprite {
 
     private float reloadInterval;
     private float reloadTimer;
+    private Sound sound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
 
     public Ship(TextureAtlas atlas, BulletPool bulletPool) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
@@ -166,6 +169,10 @@ public class Ship extends Sprite {
         Bullet bullet = bulletPool.obtain();
         bulletPos.set(pos.x, pos.y + getHalfHeight());
         bullet.set(this, bulletRegion, bulletPos, bulletV, 0.01f, worldBounds, 1);
+        sound.play(0.5f);
     }
 
+    public Sound getSound() {
+        return sound;
+    }
 }
