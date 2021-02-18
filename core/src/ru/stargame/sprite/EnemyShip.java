@@ -30,19 +30,6 @@ public class EnemyShip extends Ship {
         if (getBottom() < worldBounds.getBottom()) {
             destroy();
         }
-        if (getTop() > worldBounds.getTop() && !fight) {
-            v0.set(v);
-            v.set(0, -0.2f);
-            fight = true;
-        } else if (getTop() < worldBounds.getTop() && fight && !shootAtFight) {
-            v.set(v0);
-            shootAtFight=true;
-        }
-        if (shootAtFight && fight) {
-            this.reloadTimer = this.reloadInterval;
-            shootAtFight=false;
-            fight = false;
-        }
     }
 
     public void set(
