@@ -10,6 +10,9 @@ import ru.stargame.pool.BulletPool;
 
 public class EnemyShip extends Ship {
 
+    private volatile boolean fight = false;
+    private volatile boolean shootAtFight = false;
+
     public EnemyShip(BulletPool bulletPool, Rect worldBounds, Sound sound) {
         this.bulletPool = bulletPool;
         this.worldBounds = worldBounds;
@@ -26,6 +29,19 @@ public class EnemyShip extends Ship {
         bulletPos.set(pos.x, pos.y - getHalfHeight());
         if (getBottom() < worldBounds.getBottom()) {
             destroy();
+        }
+        if (getTop() > worldBounds.getTop() && !fight) {
+            v0.set(v);
+            v.set(0, -0.2f);
+            fight = true;
+        } else if (getTop() < worldBounds.getTop() && fight && !shootAtFight) {
+            v.set(v0);
+            shootAtFight=true;
+        }
+        if (shootAtFight && fight) {
+            this.reloadTimer = this.reloadInterval;
+            shootAtFight=false;
+            fight = false;
         }
     }
 
