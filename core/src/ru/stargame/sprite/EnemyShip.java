@@ -10,8 +10,7 @@ import ru.stargame.pool.BulletPool;
 
 public class EnemyShip extends Ship {
 
-    private volatile boolean fight = false;
-    private volatile boolean shootAtFight = false;
+
 
     public EnemyShip(BulletPool bulletPool, Rect worldBounds, Sound sound) {
         this.bulletPool = bulletPool;
