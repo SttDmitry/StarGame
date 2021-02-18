@@ -18,13 +18,12 @@ public class BaseScreen implements Screen, InputProcessor {
 
     private Rect screenBounds;
     private Rect glBounds;
-    private Rect worldBounds;
+    protected Rect worldBounds;
 
     private Matrix4 worldToGl;
     private Matrix3 screenToWorld;
 
     private Vector2 touch;
-    private Music music;
 
     @Override
     public void show() {
@@ -37,8 +36,6 @@ public class BaseScreen implements Screen, InputProcessor {
         worldToGl = new Matrix4();
         screenToWorld = new Matrix3();
         touch = new Vector2();
-        music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
-        music.play();
     }
 
     @Override
@@ -69,19 +66,16 @@ public class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public void pause() {
-        music.pause();
         System.out.println("pause");
     }
 
     @Override
     public void resume() {
-        music.play();
         System.out.println("resume");
     }
 
     @Override
     public void hide() {
-        music.pause();
         System.out.println("hide");
         dispose();
     }
@@ -89,7 +83,6 @@ public class BaseScreen implements Screen, InputProcessor {
     @Override
     public void dispose() {
         System.out.println("dispose");
-        music.dispose();
         batch.dispose();
     }
 
@@ -159,6 +152,4 @@ public class BaseScreen implements Screen, InputProcessor {
     public boolean scrolled(float amountX, float amountY) {
         return false;
     }
-
-
 }
