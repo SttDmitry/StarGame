@@ -18,7 +18,9 @@ import ru.stargame.pool.ExplosionPool;
 import ru.stargame.sprite.Background;
 import ru.stargame.sprite.Bullet;
 import ru.stargame.sprite.EnemyShip;
+import ru.stargame.sprite.GameOver;
 import ru.stargame.sprite.MainShip;
+import ru.stargame.sprite.NewGame;
 import ru.stargame.sprite.Star;
 import ru.stargame.utils.EnemyEmitter;
 
@@ -36,6 +38,8 @@ public class GameScreen extends BaseScreen {
     private EnemyPool enemyPool;
 
     private MainShip mainShip;
+    private GameOver gameOver;
+    private NewGame newGame;
 
     private Music music;
     private Sound enemyBulletSound;
@@ -59,6 +63,8 @@ public class GameScreen extends BaseScreen {
         enemyBulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
         enemyPool = new EnemyPool(bulletPool, explosionPool, worldBounds, enemyBulletSound);
         mainShip = new MainShip(atlas, bulletPool, explosionPool);
+        gameOver = new GameOver(atlas.findRegion("message_game_over"));
+        newGame = new NewGame(atlas.findRegion("button_new_game"),mainShip, bulletPool, enemyPool);
 
         enemyEmitter = new EnemyEmitter(atlas, worldBounds, enemyPool);
 
@@ -82,6 +88,8 @@ public class GameScreen extends BaseScreen {
             star.resize(worldBounds);
         }
         mainShip.resize(worldBounds);
+        gameOver.resize(worldBounds);
+        newGame.resize(worldBounds);
     }
 
     @Override
@@ -113,12 +121,14 @@ public class GameScreen extends BaseScreen {
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         mainShip.touchDown(touch, pointer, button);
+        newGame.touchDown(touch, pointer, button);
         return false;
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
         mainShip.touchUp(touch, pointer, button);
+        newGame.touchUp(touch, pointer, button);
         return false;
     }
 
@@ -126,11 +136,17 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.update(delta);
         }
-        mainShip.update(delta);
-        bulletPool.updateActiveSprites(delta);
+        if (!mainShip.isDestroyed()) {
+            mainShip.update(delta);
+            bulletPool.updateActiveSprites(delta);
+            enemyPool.updateActiveSprites(delta);
+            enemyEmitter.generate(delta);
+        } else {
+           gameOver.update(delta);
+           newGame.update(delta);
+        }
         explosionPool.updateActiveSprites(delta);
-        enemyPool.updateActiveSprites(delta);
-        enemyEmitter.generate(delta);
+
     }
 
     private void checkCollisions() {
@@ -183,10 +199,15 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.draw(batch);
         }
-        mainShip.draw(batch);
-        bulletPool.drawActiveSprites(batch);
+        if (!mainShip.isDestroyed()) {
+            mainShip.draw(batch);
+            bulletPool.drawActiveSprites(batch);
+            enemyPool.drawActiveSprites(batch);
+        } else {
+            gameOver.draw(batch);
+            newGame.draw(batch);
+        }
         explosionPool.drawActiveSprites(batch);
-        enemyPool.drawActiveSprites(batch);
         batch.end();
     }
 }

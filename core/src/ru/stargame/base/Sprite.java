@@ -90,6 +90,10 @@ public class Sprite extends Rect {
         isDestroyed = true;
     }
 
+    public void reBuild() {
+        isDestroyed = false;
+    }
+
     public void flushDestroy() {
         isDestroyed = false;
     }
