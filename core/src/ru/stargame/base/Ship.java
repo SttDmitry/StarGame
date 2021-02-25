@@ -86,4 +86,12 @@ public class Ship extends Sprite {
         Explosion explosion = explosionPool.obtain();
         explosion.set(getHeight(), pos);
     }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void restoreHp() {
+        this.hp = 100;
+    }
 }
