@@ -22,9 +22,12 @@ public class Ship extends Sprite {
     protected BulletPool bulletPool;
     protected TextureRegion bulletRegion;
     protected Vector2 bulletV;
+    protected Vector2 bulletV2;
     protected Vector2 bulletPos;
+    protected Vector2 bulletPos2;
     protected float bulletHeight;
     protected int damage;
+    protected boolean upgrade = false;
 
     protected float reloadInterval;
     protected float reloadTimer;
@@ -79,6 +82,10 @@ public class Ship extends Sprite {
     private void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage);
+        if (upgrade) {
+            Bullet bullet2 = bulletPool.obtain();
+            bullet2.set(this, bulletRegion, bulletPos2, bulletV2, bulletHeight, worldBounds, damage);
+        }
         sound.play();
     }
 
@@ -97,5 +104,9 @@ public class Ship extends Sprite {
 
     public void healHp(int hp) {
         this.hp += hp;
+    }
+
+    public void setUpgrade(boolean upgrade) {
+        this.upgrade = upgrade;
     }
 }

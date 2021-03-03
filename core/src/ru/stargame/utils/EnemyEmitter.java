@@ -65,7 +65,7 @@ public class EnemyEmitter {
         level = frags / 10 + 1;
         generateTimer += delta;
         if (generateTimer >= generateInterval) {
-            generateTimer = 0f;
+            generateTimer = 0f + frags/100f;
             hpBonus = frags / 10;
             EnemyShip enemyShip = enemyPool.obtain();
             float enemyType = (float) Math.random()+frags/200f;

@@ -33,7 +33,9 @@ public class MainShip extends Ship {
         v = new Vector2();
         v0 = new Vector2(0.5f, 0);
         bulletV = new Vector2(0, 0.5f);
+        bulletV2 = new Vector2(0, 0.5f);
         bulletPos = new Vector2();
+        bulletPos2 = new Vector2();
         bulletHeight = 0.01f;
         damage = 1;
         reloadInterval = 0.2f;
@@ -51,7 +53,14 @@ public class MainShip extends Ship {
     @Override
     public void update(float delta) {
         super.update(delta);
-        bulletPos.set(pos.x, pos.y + getHalfHeight());
+        if (upgrade) {
+            bulletPos.set(pos.x + getHalfWidth()/2, pos.y + getHalfHeight()/2);
+            bulletPos2.set(pos.x - getHalfWidth()/2, pos.y + getHalfHeight()/2);
+            reloadInterval = 0.3f;
+        } else {
+            bulletPos.set(pos.x, pos.y + getHalfHeight());
+        }
+
         if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());
             stop();
@@ -163,4 +172,6 @@ public class MainShip extends Ship {
     private void stop() {
         v.setZero();
     }
+
+
 }

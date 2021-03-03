@@ -185,7 +185,9 @@ public class GameScreen extends BaseScreen {
            frags=0;
         }
         explosionPool.updateActiveSprites(delta);
-
+        if (frags >=50) {
+            mainShip.setUpgrade(true);
+        }
     }
 
     private void checkCollisions() {
