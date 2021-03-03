@@ -94,4 +94,8 @@ public class Ship extends Sprite {
     public void restoreHp() {
         this.hp = 100;
     }
+
+    public void healHp(int hp) {
+        this.hp += hp;
+    }
 }

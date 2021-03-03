@@ -21,6 +21,7 @@ import ru.stargame.sprite.Bullet;
 import ru.stargame.sprite.EnemyShip;
 import ru.stargame.sprite.GameOver;
 import ru.stargame.sprite.MainShip;
+import ru.stargame.sprite.Medkit;
 import ru.stargame.sprite.NewGame;
 import ru.stargame.sprite.Star;
 import ru.stargame.sprite.TrackingStar;
@@ -37,6 +38,7 @@ public class GameScreen extends BaseScreen {
     private static final String LEVEL = "Level: ";
 
     private Texture bg;
+    private Texture mk;
     private TextureAtlas atlas;
 
     private Background background;
@@ -62,12 +64,15 @@ public class GameScreen extends BaseScreen {
     private StringBuilder sbHp;
     private StringBuilder sbLevel;
 
+    private Medkit medkit;
+
     private int frags;
 
     @Override
     public void show() {
         super.show();
         bg = new Texture("textures/bg.png");
+        mk = new Texture("textures/medkit.png");
         atlas = new TextureAtlas(Gdx.files.internal("textures/mainAtlas.tpack"));
         background = new Background(bg);
         bulletPool = new BulletPool();
@@ -79,6 +84,7 @@ public class GameScreen extends BaseScreen {
         gameOver = new GameOver(atlas.findRegion("message_game_over"));
         newGame = new NewGame(atlas.findRegion("button_new_game"),mainShip, bulletPool, enemyPool);
         font = new Font("font/font.fnt", "font/font.png");
+        medkit = new Medkit(mk, worldBounds);
         font.setSize(FONT);
         sbFrags = new StringBuilder();
         sbHp = new StringBuilder();
@@ -115,6 +121,7 @@ public class GameScreen extends BaseScreen {
         mainShip.resize(worldBounds);
         gameOver.resize(worldBounds);
         newGame.resize(worldBounds);
+        medkit.resize(worldBounds);
     }
 
     @Override
@@ -128,6 +135,7 @@ public class GameScreen extends BaseScreen {
         enemyBulletSound.dispose();
         explosionSound.dispose();
         mainShip.dispose();
+        mk.dispose();
         super.dispose();
     }
 
@@ -146,14 +154,18 @@ public class GameScreen extends BaseScreen {
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         mainShip.touchDown(touch, pointer, button);
-        newGame.touchDown(touch, pointer, button);
+        if (mainShip.isDestroyed()){
+            newGame.touchDown(touch, pointer, button);
+        }
         return false;
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
         mainShip.touchUp(touch, pointer, button);
-        newGame.touchUp(touch, pointer, button);
+        if (mainShip.isDestroyed()){
+            newGame.touchUp(touch, pointer, button);
+        }
         return false;
     }
 
@@ -166,6 +178,7 @@ public class GameScreen extends BaseScreen {
             bulletPool.updateActiveSprites(delta);
             enemyPool.updateActiveSprites(delta);
             enemyEmitter.generate(delta, frags);
+            medkit.update(delta, frags);
         } else {
            gameOver.update(delta);
            newGame.update(delta);
@@ -212,6 +225,11 @@ public class GameScreen extends BaseScreen {
                 }
             }
         }
+        if (mainShip.isMe(medkit.pos)) {
+            medkit.heal(mainShip);
+        } else if (medkit.isOutside(worldBounds)) {
+            medkit.destroy();
+        }
     }
 
     private void freeAllDestroyed() {
@@ -232,6 +250,7 @@ public class GameScreen extends BaseScreen {
             mainShip.draw(batch);
             bulletPool.drawActiveSprites(batch);
             enemyPool.drawActiveSprites(batch);
+            if (medkit.isIsPrinted()){medkit.draw(batch);}
         } else {
             gameOver.draw(batch);
             newGame.draw(batch);

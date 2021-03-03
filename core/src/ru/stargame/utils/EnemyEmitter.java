@@ -28,6 +28,7 @@ public class EnemyEmitter {
     private static final int ENEMY_BIG_BULLET_DAMAGE = 10;
     private static final float ENEMY_BIG_RELOAD_INTERVAL = 1f;
     private static final int ENEMY_BIG_HP = 10;
+    private static int hpBonus = 0;
 
     private final Vector2 enemySmallBulletV = new Vector2(0, -0.3f);
     private final Vector2 enemyMediumBulletV = new Vector2(0, -0.25f);
@@ -65,8 +66,9 @@ public class EnemyEmitter {
         generateTimer += delta;
         if (generateTimer >= generateInterval) {
             generateTimer = 0f;
+            hpBonus = frags / 10;
             EnemyShip enemyShip = enemyPool.obtain();
-            float enemyType = (float) Math.random();
+            float enemyType = (float) Math.random()+frags/200f;
             if (enemyType < 0.5f) {
                 enemyShip.set(
                         enemySmallRegions,
@@ -77,7 +79,7 @@ public class EnemyEmitter {
                         ENEMY_SMALL_BULLET_DAMAGE*level,
                         ENEMY_SMALL_RELOAD_INTERVAL,
                         ENEMY_SMALL_HEIGHT,
-                        ENEMY_SMALL_HP
+                        ENEMY_SMALL_HP + hpBonus
                 );
             } else if (enemyType < 0.8f) {
                 enemyShip.set(
@@ -89,7 +91,7 @@ public class EnemyEmitter {
                         ENEMY_MEDIUM_BULLET_DAMAGE*level,
                         ENEMY_MEDIUM_RELOAD_INTERVAL,
                         ENEMY_MEDIUM_HEIGHT,
-                        ENEMY_MEDIUM_HP
+                        ENEMY_MEDIUM_HP + hpBonus
                 );
             } else {
                 enemyShip.set(
@@ -101,7 +103,7 @@ public class EnemyEmitter {
                         ENEMY_BIG_BULLET_DAMAGE*level,
                         ENEMY_BIG_RELOAD_INTERVAL,
                         ENEMY_BIG_HEIGHT,
-                        ENEMY_BIG_HP
+                        ENEMY_BIG_HP + hpBonus
                 );
             }
             enemyShip.pos.x = Rnd.nextFloat(
