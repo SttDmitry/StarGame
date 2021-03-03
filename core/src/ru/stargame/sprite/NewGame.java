@@ -6,10 +6,12 @@ import ru.stargame.base.BaseButton;
 import ru.stargame.math.Rect;
 import ru.stargame.pool.BulletPool;
 import ru.stargame.pool.EnemyPool;
+import ru.stargame.screen.GameScreen;
 
 public class NewGame extends BaseButton {
 
     private static final float PADDING = 0.03f;
+    private static final float PROPORTION = 0.075f;
 
     private MainShip mainShip;
     private BulletPool bulletPool;
@@ -25,7 +27,7 @@ public class NewGame extends BaseButton {
     @Override
     public void resize(Rect worldBounds) {
         this.pos.set(worldBounds.pos);
-        setHeightProportion(worldBounds.getHeight()*0.075f);
+        setHeightProportion(worldBounds.getHeight()*PROPORTION);
         setBottom(worldBounds.getBottom() + PADDING);
     }
 
@@ -34,6 +36,7 @@ public class NewGame extends BaseButton {
     @Override
     public void action() {
         mainShip.reBuild();
+        mainShip.restoreHp();
         mainShip.setLeft(0-mainShip.getHalfWidth());
         bulletPool.destroyActiveSprites();
         enemyPool.destroyActiveSprites();
